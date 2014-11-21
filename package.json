@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "description": "Simple deployment of static apps to s3",
   "main": "index.js",
-	"bin": {
-		"ruse": "./bin/ruse"
-	},
+  "bin": {
+    "ruse": "./bin/ruse"
+  },
   "scripts": {
     "ruse": "./bin/ruse"
   },
@@ -28,6 +28,9 @@
   "homepage": "https://github.com/mileszim/ruse",
   "dependencies": {
     "aws-sdk": "^2.0.28",
-    "commander": "^2.5.0"
+    "chalk": "^0.5.1",
+    "commander": "^2.5.0",
+    "dotfile-config": "^1.0.0",
+    "inquirer": "^0.8.0"
   }
 }

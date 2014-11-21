@@ -1,8 +1,15 @@
 #!/usr/bin/env node
 
+/** @const */
+var RUSE_RC = '.ruserc';
+
+
 /** Dependencies */
-var package = require('../package.json');
-var program = require('commander');
+var package  = require('../package.json');
+var config   = require('dotfile-config')(RUSE_RC);
+var chalk    = require('chalk');
+var program  = require('commander');
+var inquirer = require('inquirer');
 
 
 
@@ -13,6 +20,7 @@ var program = require('commander');
 program.version(package.version);
 
 
+
 /**
  * Setup
  */
@@ -20,8 +28,37 @@ program
 	.command('setup')
 	.description('Run ruse setup/configuration wizard')
 	.action(function(env) {
-		console.log('Setting up!');
+		console.log(chalk.bold.underline('Setting up Ruse:'));
+		
+		inquirer.prompt([
+			{
+				type:    'input',
+				name:    'aws_access_key_id',
+				message: 'AWS Access Key ID:'
+			},
+			{
+				type:    'input',
+				name:    'secret_access_key',
+				message: 'AWS Secret Access key:'
+			},
+			{
+				type:    'input',
+				name:    'cloudflare_api_key',
+				message: 'CloudFlare API Key:'
+			},
+			{
+				type:    'input',
+				name:    'root_domain',
+				message: 'Root app domain:'
+			}
+		], function(response) {
+			console.log();
+			config.set(response);
+			
+			console.log(chalk.bold.green('Configured!'));
+		});
 	});
+
 
 
 /**
@@ -32,7 +69,9 @@ program
 	.description('Configure ruse settings')
 	.action(function(env) {
 		console.log('Configuring!');
+		console.log(config.get());
 	});
+
 
 
 /**
