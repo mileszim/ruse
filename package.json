@@ -3,8 +3,11 @@
   "version": "0.0.0",
   "description": "Simple deployment of static apps to s3",
   "main": "index.js",
+	"bin": {
+		"ruse": "./bin/ruse"
+	},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "ruse": "./bin/ruse"
   },
   "repository": {
     "type": "git",
@@ -22,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/mileszim/ruse/issues"
   },
-  "homepage": "https://github.com/mileszim/ruse"
+  "homepage": "https://github.com/mileszim/ruse",
+  "dependencies": {
+    "aws-sdk": "^2.0.28",
+    "commander": "^2.5.0"
+  }
 }
