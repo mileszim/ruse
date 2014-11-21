@@ -29,6 +29,7 @@
   "dependencies": {
     "aws-sdk": "^2.0.28",
     "chalk": "^0.5.1",
+    "chance": "^0.6.1",
     "commander": "^2.5.0",
     "dotfile-config": "^1.0.0",
     "inquirer": "^0.8.0"
