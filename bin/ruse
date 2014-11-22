@@ -6,7 +6,7 @@ var RUSE_RC = '.ruserc';
 
 /** Dependencies */
 var package  = require('../package.json');
-var config   = require('dotfile-config')(RUSE_RC);
+var config   = require('dotfun')(RUSE_RC, { home: true });
 var chalk    = require('chalk');
 var program  = require('commander');
 var inquirer = require('inquirer');
@@ -28,34 +28,94 @@ program
 	.command('setup')
 	.description('Run ruse setup/configuration wizard')
 	.action(function(env) {
-		console.log(chalk.bold.underline('Setting up Ruse:'));
-		
+		console.log('\n', chalk.bold.underline('Setting up Ruse:'));
 		inquirer.prompt([
 			{
-				type:    'input',
-				name:    'aws_access_key_id',
-				message: 'AWS Access Key ID:'
-			},
-			{
-				type:    'input',
-				name:    'secret_access_key',
-				message: 'AWS Secret Access key:'
-			},
-			{
-				type:    'input',
-				name:    'cloudflare_api_key',
-				message: 'CloudFlare API Key:'
-			},
-			{
-				type:    'input',
-				name:    'root_domain',
-				message: 'Root app domain:'
+				type:    'list',
+				name:    'store',
+				message: 'Choose an asset store:',
+				choices: [
+					{
+						name: 'AWS S3',
+						value: 'aws'
+					}
+				]
 			}
-		], function(response) {
-			console.log();
-			config.set(response);
-			
-			console.log(chalk.bold.green('Configured!'));
+		], function(res) {
+			config.set('store', res.store);
+			if (res.store === 'aws') {
+				console.log('\n', chalk.bold.underline('Configure AWS:'));
+				inquirer.prompt([
+					{
+						type:    'list',
+						name:    'region',
+						message: 'Region:',
+						choices: [
+							{
+								name:  'US East',
+								value: 'us-east-1'
+							},
+							{
+								name:  'US West (Oregon)',
+								value: 'us-west-2'
+							},
+							{
+								name:  'US West (N. California)',
+								value: 'us-west-1'
+							},
+							{
+								name:  'EU (Ireland)',
+								value: 'eu-west-1'
+							},
+							{
+								name:  'EU (Frankfurt)',
+								value: 'eu-central-1'
+							},
+							{
+								name:  'Asia Pacific (Singapore)',
+								value: 'ap-southeast-1'
+							},
+							{
+								name:  'Asia Pacific (Sydney)',
+								value: 'ap-southeast-2'
+							},
+							{
+								name:  'Asia Pacific (Tokyo)',
+								value: 'ap-northeast-1'
+							},
+							{
+								name:  'South America (Sao Paulo)',
+								value: 'sa-east-1'
+							}
+						],
+						default: 'us-west-1'
+					},
+					{
+						type:    'input',
+						name:    'accessKeyId',
+						message: 'Access Key ID:'
+					},
+					{
+						type:    'input',
+						name:    'secretAccessKey',
+						message: 'Secret Access Key:'
+					}
+				], function(response) {
+					config.set('aws', response);
+					console.log('\n', chalk.bold.underline('Configure CloudFlare:'));
+					inquirer.prompt([
+						{
+							type:    'input',
+							name:    'api_key',
+							message: 'API Key:'
+						}
+					], function(response) {
+						config.set('cloudflare', response);
+					
+						console.log(chalk.bold.green('Configured!'));
+					});
+				});
+			}
 		});
 	});
 
